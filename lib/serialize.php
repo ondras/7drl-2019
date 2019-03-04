@@ -5,7 +5,7 @@ define("HP", 1);
 
 
 function serialize_state(&$level) {
-	echo "<input autocomplete='off' type='radio' id='is' />";
+	echo "<input autocomplete='off' type='radio' id='intro' />";
 
 	foreach ($level["creatures"] as &$creature) {
 		$id = $creature["id"];
@@ -30,10 +30,10 @@ function serialize_state(&$level) {
 }
 
 function serialize_intro(&$level) {
-	echo "<section id='intro'>";
+	echo "<header>";
 	echo $level["intro"];
-	echo "<label for='is'>Play</label>";
-	echo "</section>";
+	echo "<label for='intro'>Play</label>";
+	echo "</header>";
 }
 
 function serialize_map(&$level) {
@@ -214,11 +214,13 @@ function serialize_style(&$level) {
 }
 
 function serialize_level(&$level) {
+	echo "<section id='game'>";
 	serialize_state($level);
 	serialize_intro($level);
 	serialize_map($level);
 	serialize_nav($level);
 	serialize_inv($level);
+	echo "</section>";
 	serialize_style($level);
 }
 

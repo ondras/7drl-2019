@@ -1,4 +1,4 @@
-#is = intro state (input)
+#intro = intro state (input)
 
 #cs*, .cs, .key = creature state (input)
 #x* = x position (input)
