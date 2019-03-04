@@ -1,0 +1,76 @@
+#nav {
+	position: relative;
+
+	#victory, #gameover { display: none; } 
+
+	label { 
+		display: none;
+		position: absolute;
+		&::after { position: absolute; }
+	}
+
+	.left, .right {
+		top: 50%;
+		transform: translate(0, -50%);
+
+		&::after {
+			top: 50%;
+			transform: translate(0, -50%);
+		}
+	}
+
+	.left {
+		text-align: right;
+		right: calc(50% + 1ch);
+		padding-right: 2ch;
+
+		&::after {
+			right: 0;
+			content: "←";
+		}
+	}
+
+	.right {
+		text-align: left;
+		left: calc(50% + 1ch);
+		padding-left: 2ch;
+
+		&::after {
+			left: 0;
+			content: "→";
+		}
+	}
+
+	.up, .down {
+		left: 50%;
+		transform: translate(-50%, 0);
+		text-align: center;
+
+		&::after {
+			left: 50%;
+			transform: translate(-50%, 0);
+		}
+	}
+
+	.up {
+		bottom: calc(50% + 0.5em);
+		padding-bottom: 1em;
+
+		&::after {
+			bottom: 0;
+			content: "↑";
+		}
+	}
+
+	.down {
+		top: calc(50% + 0.5em);
+		padding-top: 1em;
+
+		&::after {
+			top: 0;
+			content: "↓";
+		}
+	}
+
+}
+

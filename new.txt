@@ -1,0 +1,21 @@
+#is = intro state (input)
+
+#cs*, .cs, .key = creature state (input)
+#x* = x position (input)
+#y* = y position (input)
+
+#c*, .c = creature (visual)
+.left, .right, .up, .down = navigation buttons (visual, label)
+
+
+
+--- OLD BELOW ---
+
+#i* = item (visual)
+#is* = item state (input)
+
+#cd* = creature dialog (visual)
+#cds* = creature dialog state
+
+#ii* = item in inventory
+

@@ -1,0 +1,40 @@
+@dim: #222;
+
+#inv {
+	.hp, .key {
+		display: inline-block;
+	}
+
+	.key {
+		color: @dim;
+	}
+
+	.hp {
+		color: red;
+	}
+}
+
+@keyframes key-add {
+	0% {
+	}
+	50% {
+		transform: scale(3);
+		color: lime;
+	}
+	100% {
+		transform: scale(1);
+		color: lime;
+	}
+}
+
+@keyframes hp-remove {
+	0% {
+	}
+	50% {
+		transform: scale(3);
+	}
+	100% {
+		transform: scale(1);
+		color: @dim;
+	}
+}
