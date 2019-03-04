@@ -10,6 +10,7 @@
 		display: none;
 		position: absolute;
 		&::after { position: absolute; }
+		font-size: 200%;
 	}
 
 	.left, .right {
@@ -29,7 +30,7 @@
 
 		&::after {
 			right: 0;
-			content: "←";
+			content: "◀";
 		}
 	}
 
@@ -40,7 +41,7 @@
 
 		&::after {
 			left: 0;
-			content: "→";
+			content: "▶";
 		}
 	}
 
@@ -61,7 +62,7 @@
 
 		&::after {
 			bottom: 0;
-			content: "↑";
+			content: "▲";
 		}
 	}
 
@@ -71,9 +72,21 @@
 
 		&::after {
 			top: 0;
-			content: "↓";
+			content: "▼";
 		}
 	}
 
+	#victory {
+		strong {
+			color: gold;
+		}
+
+		.gold {
+			color: gold;
+			&::after {
+				content: counter(gold);
+			}
+		}
+	}
 }
 

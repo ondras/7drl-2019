@@ -1,12 +1,13 @@
 #game {
-	font-size: 200%;
 	padding: 1em 1ch 0;
-	min-height: calc(100vh - 1em*@lh);
+	min-height: calc(100vh - 2em*@lh);
 
 	input {
 		position: absolute;
 		visibility: hidden;
 	}
+
+	counter-reset: gold;
 }
 
 @import "map.less";

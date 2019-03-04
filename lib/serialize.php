@@ -1,9 +1,5 @@
 <?php
 
-define("KEYS", 1);
-define("HP", 1);
-
-
 function serialize_state(&$level) {
 	echo "<input autocomplete='off' type='radio' id='intro' />";
 
@@ -73,12 +69,15 @@ function serialize_map(&$level) {
 }
 
 function serialize_inv(&$level) {
+
 	echo "<section id='inv'>";
 	echo "<div>Health: ";
-	for ($i=0;$i<HP;$i++) { echo "<span class='hp'>♥</span>"; }
+	$hp = $level["hp"];
+	for ($i=0;$i<$hp;$i++) { echo "<span class='hp'>♥</span>"; }
 
 	echo "</div><div>Keys: ";
-	for ($i=0;$i<KEYS;$i++) { echo "<span class='key'>⚷♂♀</span>"; }
+	$keys = $level["keys"];
+	for ($i=0;$i<$keys;$i++) { echo "<span class='key'>⚷♂♀</span>"; }
 	echo "</div>";
 	echo "</section>";
 }
@@ -112,12 +111,8 @@ function serialize_nav(&$level) {
 		echo "<label for='cs{$id}' class='down'>{$label}</label>";
 	}
 
-	$url_next = $level["url_next"];
-	$url_reload = $level["url_reload"];
-	$url_new = $level["url_new"];
-	echo "<div id='victory'>Congratulations! <a href='{$url_next}'>Next</a></div>";
-	echo "<div id='gameover'>Game over! <a href='{$url_reload}'>Reload</a>, <a href='{$url_new}'>New</a></div>";
-
+	echo "<div id='victory'>" . $level["victory"] . "</div>";
+	echo "<div id='gameover'>" . $level["gameover"] . "</div>";
 	echo "</section>";
 }
 
@@ -181,29 +176,29 @@ function serialize_style(&$level) {
 
 	$key_ok = ".cs.key:checked";
 	$key_ko = ".cs:not(.key):checked";
+	$keys = $level["keys"];
+	$hp = $level["hp"];
 
-	for ($i=0;$i<KEYS;$i++) {
+	for ($i=0;$i<$keys;$i++) {  // key fade in
 		$num = $j+1;
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ok} ~ "; }
 		echo "#inv .key:nth-child({$num}) { animation: key-add 800ms both; }";
 	}
 
-	for ($i=0;$i<HP;$i++) {
-		$num = HP-$i;
+	for ($i=0;$i<$hp;$i++) {  // hp fade out
+		$num = $hp-$i;
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ko} ~ "; }
 		echo "#inv .hp:nth-child({$num}) { animation: hp-remove 800ms both; }";
 	}
 
-	// victory
-	for ($i=0;$i<KEYS;$i++) {
+	for ($i=0;$i<$keys;$i++) {  // victory
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ok} ~ "; }
 		echo "#nav label { display: none !important }";
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ok} ~ "; }
 		echo "#nav #victory { display: initial }";
 	}
 
-	// gameover
-	for ($i=0;$i<HP;$i++) {
+	for ($i=0;$i<$hp;$i++) {  // gameover
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ko} ~ "; }
 		echo "#nav label { display: none !important }";
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ko} ~ "; }

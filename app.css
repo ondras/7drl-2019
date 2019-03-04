@@ -25,14 +25,18 @@ a:hover {
   background-size: 100% 100%;
   background-position: 0 100%;
 }
+strong {
+  font-weight: normal;
+  color: #fff;
+}
 footer {
   text-align: center;
   margin-bottom: 1.3em;
 }
 #game {
-  font-size: 200%;
   padding: 1em 1ch 0;
-  min-height: calc(100vh - 1em*1.3);
+  min-height: calc(100vh - 2em*1.3);
+  counter-reset: gold;
 }
 #game input {
   position: absolute;
@@ -40,6 +44,7 @@ footer {
 }
 #map {
   position: relative;
+  font-size: 200%;
   line-height: 1;
 }
 #map .wall {
@@ -57,6 +62,9 @@ footer {
   color: dodgerblue;
   text-decoration: underline;
   transition: all 100ms;
+}
+#inv {
+  font-size: 200%;
 }
 #inv .hp,
 #inv .key {
@@ -100,6 +108,7 @@ footer {
 #nav label {
   display: none;
   position: absolute;
+  font-size: 200%;
 }
 #nav label::after {
   position: absolute;
@@ -121,7 +130,7 @@ footer {
 }
 #nav .left::after {
   right: 0;
-  content: "←";
+  content: "◀";
 }
 #nav .right {
   text-align: left;
@@ -130,7 +139,7 @@ footer {
 }
 #nav .right::after {
   left: 0;
-  content: "→";
+  content: "▶";
 }
 #nav .up,
 #nav .down {
@@ -149,7 +158,7 @@ footer {
 }
 #nav .up::after {
   bottom: 0;
-  content: "↑";
+  content: "▲";
 }
 #nav .down {
   top: calc(50% + 0.5em);
@@ -157,7 +166,16 @@ footer {
 }
 #nav .down::after {
   top: 0;
-  content: "↓";
+  content: "▼";
+}
+#nav #victory strong {
+  color: gold;
+}
+#nav #victory .gold {
+  color: gold;
+}
+#nav #victory .gold::after {
+  content: counter(gold);
 }
 #intro:not(:checked) ~ :not(header) {
   display: none;
@@ -184,10 +202,6 @@ footer {
   color: gold;
   font-size: 100%;
   margin-top: 2.6em;
-}
-#welcome strong {
-  font-weight: normal;
-  color: #fff;
 }
 #welcome p strong {
   color: red;
