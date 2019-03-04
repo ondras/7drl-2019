@@ -1,6 +1,7 @@
 <?php
 	include "lib/generate.php";
 	include "lib/serialize.php";
+	include "lib/bg.php";
 
 	$level = (isset($_GET["level"]) ? (int) $_GET["level"] : 0);
 	$seed = (isset($_GET["seed"]) ? (int) $_GET["seed"] : mt_rand());
@@ -14,6 +15,7 @@
 		serialize_level($level);
 		echo "<style>";
 		include "app.css";
+		create_bg();
 		echo "</style>";
 		include "lib/footer.html";
 
@@ -24,6 +26,7 @@
 		include "lib/welcome.html";
 		echo "<style>";
 		include "app.css";
+		create_bg();
 		echo "</style>";
 		include "lib/footer.html";
 	}
