@@ -1,14 +1,17 @@
 #welcome {
-	margin: 1em auto;
-	font-size: 50%;
-	line-height: 1.3;
-
-	width: calc(100% - 2ch);
+	@lh: 1.3;
+	margin: 0 auto;
 	max-width: 80ch;
+	line-height: @lh;
+	min-height: calc(100vh - 4em*@lh);
+	padding-bottom: 3em*@lh;
+	font-size: 120%;
 
 	h1 {
 		text-align: center;
 		color: #fff;
+		font-size: 150%;
+		margin: 0;
 	}
 
 	h2 {
@@ -24,5 +27,31 @@
 
 	p strong {
 		color: red;
+	}
+
+	ul {
+		padding-left: 4ch;
+		list-style: none;
+		li {
+			text-indent: -2ch;
+			+li { margin-top: 1em; }
+		}
+	}
+
+	.ok::before {
+		content: "+ ";
+		color: lime;
+		font-weight: bold;
+	}
+
+	.ko::before {
+		content: "− ";
+		color: red;
+		font-weight: bold;
+	}
+
+	~ footer {
+		font-size: 120%;
+		margin-top: @lh * 1em;
 	}
 }

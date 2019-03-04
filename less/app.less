@@ -1,13 +1,19 @@
+* {
+	box-sizing: border-box;
+}
+
 body {
-	margin: 0;
+	margin: 1em 1ch;
 	font-family: roboto mono, courier, monospace;
 	background-color: #000;
 	color: #aaa;
+/*
 	font-size: 200%;
 	line-height: 1;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
+	*/
 }
 
 input {
@@ -16,22 +22,28 @@ input {
 }
 
 label, a {
-	font-weight: bold;
-	text-decoration: underline;
-	text-decoration-color: #444;
+	text-decoration: none;
+	background: linear-gradient(to right, dodgerblue, dodgerblue) no-repeat;
+	background-position: 0 95%;
+	background-size: 100% 1px;
+	color: inherit;
 	cursor: pointer;
-	color: #ccc;
 	border-radius: 4px;
 	transition: all 300ms;
 	&:hover {
 		color: #fff;
-		text-decoration-color: #aaa;
+		background-size: 100% 100%;
+		background-position: 0 100%;
 	}
+}
+
+footer {
+	margin-top: 1em;
+	text-align: center;
 }
 
 @import "map.less";
 @import "inv.less";
-@import "gold.less";
 @import "nav.less";
 @import "intro.less";
 @import "welcome.less";

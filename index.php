@@ -10,23 +10,22 @@
 		$level = generate_level($level, $seed);
 
 		include "lib/header.html";
-
-		echo "<body>";
 		serialize_level($level);
 		echo "<style>";
-		echo file_get_contents("app.css");
-		echo "</style></body></html>";
+		include "app.css";
+		echo "</style>";
+		include "lib/footer.html";
 
 	} else {
 		$seed = mt_rand();
 		$title = $name;
-		include "lib/header.html";
 
-		echo "<body>";
+		include "lib/header.html";
 		include "lib/welcome.html";
 		echo "<style>";
-		echo file_get_contents("app.css");
-		echo "</style></body></html>";
+		include "app.css";
+		echo "</style>";
+		include "lib/footer.html";
 	}
 
 ?>

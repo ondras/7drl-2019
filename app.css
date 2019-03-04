@@ -1,13 +1,18 @@
+* {
+  box-sizing: border-box;
+}
 body {
-  margin: 0;
+  margin: 1em 1ch;
   font-family: roboto mono, courier, monospace;
   background-color: #000;
   color: #aaa;
-  font-size: 200%;
-  line-height: 1;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+  /*
+	font-size: 200%;
+	line-height: 1;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	*/
 }
 input {
   position: absolute;
@@ -15,18 +20,24 @@ input {
 }
 label,
 a {
-  font-weight: bold;
-  text-decoration: underline;
-  text-decoration-color: #444;
+  text-decoration: none;
+  background: linear-gradient(to right, dodgerblue, dodgerblue) no-repeat;
+  background-position: 0 95%;
+  background-size: 100% 1px;
+  color: inherit;
   cursor: pointer;
-  color: #ccc;
   border-radius: 4px;
   transition: all 300ms;
 }
 label:hover,
 a:hover {
   color: #fff;
-  text-decoration-color: #aaa;
+  background-size: 100% 100%;
+  background-position: 0 100%;
+}
+footer {
+  margin-top: 1em;
+  text-align: center;
 }
 #map {
   position: relative;
@@ -74,12 +85,6 @@ a:hover {
     transform: scale(1);
     color: #222;
   }
-}
-body {
-  counter-reset: gold 0;
-}
-.gold {
-  color: gold;
 }
 #nav {
   position: relative;
@@ -157,15 +162,18 @@ body {
   display: none;
 }
 #welcome {
-  margin: 1em auto;
-  font-size: 50%;
-  line-height: 1.3;
-  width: calc(100% - 2ch);
+  margin: 0 auto;
   max-width: 80ch;
+  line-height: 1.3;
+  min-height: calc(100vh - 4em*1.3);
+  padding-bottom: 3.9em;
+  font-size: 120%;
 }
 #welcome h1 {
   text-align: center;
   color: #fff;
+  font-size: 150%;
+  margin: 0;
 }
 #welcome h2 {
   color: gold;
@@ -178,4 +186,28 @@ body {
 }
 #welcome p strong {
   color: red;
+}
+#welcome ul {
+  padding-left: 4ch;
+  list-style: none;
+}
+#welcome ul li {
+  text-indent: -2ch;
+}
+#welcome ul li + li {
+  margin-top: 1em;
+}
+#welcome .ok::before {
+  content: "+ ";
+  color: lime;
+  font-weight: bold;
+}
+#welcome .ko::before {
+  content: "− ";
+  color: red;
+  font-weight: bold;
+}
+#welcome ~ footer {
+  font-size: 120%;
+  margin-top: 1.3em;
 }
