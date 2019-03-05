@@ -1,14 +1,14 @@
 <?php
 	function create_bg() {
-		$w = 16;
-		$h = 16;
+		$w = 40;
+		$h = 34;
 		$cell = 3;
 		$image = imagecreatetruecolor($w*$cell, $h*$cell);
 
 		for ($x=0;$x<$w;$x++) {
 			for ($y=0;$y<$h;$y++) {
-				$b = mt_rand(0, 20);
-				$color = imagecolorallocate($image, $b, $b, $b);
+				$i = mt_rand(0, 20);
+				$color = imagecolorallocate($image, $i, $i, $i);
 				imagefilledrectangle($image, $x*$cell, $y*$cell, ($x+1)*$cell, ($y+1)*$cell, $color);
 			}
 		}

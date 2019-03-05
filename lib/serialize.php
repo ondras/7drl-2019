@@ -1,27 +1,41 @@
 <?php
 
+function input($type, $id, $attrs = array()) {
+	echo "<input autocomplete='off' type='{$type}' id='{$id}' ";
+	foreach ($attrs as $k=>$v) { echo "{$k}='{$v}' "; }
+	echo "/>";
+}
+
+function wall($len) {
+	echo "<span class='wall' title='Solid wall'>";
+	for ($i=0;$i<$len;$i++) { echo "#"; }
+	echo "</span>";
+}
+
 function serialize_state(&$level) {
-	echo "<input autocomplete='off' type='radio' id='intro' />";
+	input("radio", "intro");
 
 	foreach ($level["creatures"] as &$creature) {
 		$id = $creature["id"];
 		$key = ($creature["key"] ? "key" : "");
-		echo "<input autocomplete='off' type='radio' id='cs{$id}' class='cs {$key}' />";
+		input("radio", "cs{$id}", array("class" => "cs {$key}"));
 	}
-	/*
-	foreach ($level["items"] as &$item) {
-		$id = $item["id"];
-		echo "<input autocomplete='off' type='radio' id='is{$id}' />";
+
+	foreach ($level["gold"] as &$gold) {
+		$id = $gold["id"];
+		input("radio", "gs{$id}");
 	}
-	*/
+
 	$size = $level["size"];
 	for ($i=0;$i<$size[0];$i++) {
-		$checked = ($i == $level["pc"][0] ? "checked" : "");
-		echo "<input autocomplete='off' type='radio' id='x{$i}' name='x' {$checked} />";
+		$attrs = array("name"=>"x");
+		if ($i == $level["pc"][0]) { $attrs["checked"] = "checked"; }
+		input("radio", "x{$i}", $attrs);
 	}
 	for ($i=0;$i<$size[1];$i++) {
-		$checked = ($i == $level["pc"][1] ? "checked" : "");
-		echo "<input autocomplete='off' type='radio' id='y{$i}' name='y' {$checked} />";
+		$attrs = array("name"=>"y");
+		if ($i == $level["pc"][1]) { $attrs["checked"] = "checked"; }
+		input("radio", "y{$i}", $attrs);
 	}
 }
 
@@ -36,33 +50,30 @@ function serialize_map(&$level) {
 	$size = $level["size"];
 	echo "<section id='map'>";
 
-	echo "<span class='wall' title='Solid wall'>";
-	for ($i=-1;$i<=$size[0];$i++) { echo "#"; }
-	echo "</span><br/>";
-
+	wall($size[0]+2);
+	echo "<br/>";
+	
 	for ($y=0; $y<$size[1]; $y++) {
-		echo "<span class='wall' title='Solid wall'>#</span><span class='cell'>";
+		wall(1);
+		echo "<span class='cell'>";
 		for ($x=0; $x<$size[0]; $x++) { echo "."; }
-		echo "</span><span class='wall' title='Solid wall'>#</span><br/>";
+		echo "</span>";
+		wall(1);
+		echo "<br/>";
 	}
 
-	echo "<span class='wall' title='Solid wall'>";
-	for ($i=-1;$i<=$size[0];$i++) { echo "#"; }
-	echo "</span><br/>";
+	wall($size[0]+2);
+
+	foreach ($level["gold"] as &$gold) {
+		$id = $gold["id"];
+		echo "<span class='g' id='g{$id}'>$</span>";
+	}
 
 	foreach ($level["creatures"] as &$creature) {
 		$id = $creature["id"];
 		$name = $creature["name"];
 		echo "<span class='c' id='c{$id}' title='{$name}'>{$creature['letter']}</span>";
 	}
-
-/*
-
-	foreach ($level["items"] as &$item) {
-		$id = $item["id"];
-		echo "<label id='i{$id}' class='gold' for='is{$id}'>$</label>";
-	}
-*/
 
 	echo "<span id='pc' title='You!'>@</span>";
 	echo "</section>";
@@ -116,16 +127,7 @@ function serialize_nav(&$level) {
 	echo "</section>";
 }
 
-function serialize_style(&$level) {
-	echo "<style>";
-/*
-	foreach ($level["items"] as &$item) {
-		$id = $item["id"];
-		echo "#is{$id}:checked ~ #map #i{$id} { display: none }"; // picked items not visible
-		echo "#is{$id}:checked { counter-increment: gold }"; // gold counter
-		echo "#is{$id}:not(:checked) ~ #inv #ii{$id} { display: none }"; // gold in inventory
-	}
-*/
+function serialize_level_style(&$level) {
 	$size = $level["size"];
 	for ($i=0;$i<$size[0];$i++) {
 		$x = $i+1;
@@ -143,7 +145,21 @@ function serialize_style(&$level) {
 		echo "#y{$i}:checked ~ #nav .up[for=y{$prev}] { display: initial }";  // up buttons
 		echo "#y{$i}:checked ~ #nav .down[for=y{$next}] { display: initial }";  // down buttons
 	}
+}
 
+function serialize_gold_style(&$level) {
+	foreach ($level["gold"] as &$gold) {
+		$id = $gold["id"];
+		$pos = $gold["position"];
+		$x = $pos[0]+1;
+		$y = $pos[1]+1;
+		echo "#g{$id} { left: {$x}ch; top: {$y}em; }"; // gold position
+		echo "#gs{$id}:checked ~ #map #g{$id} { display: none }"; // picked gold not visible
+		echo "#gs{$id}:checked { counter-increment: gold }"; // gold counter
+	}
+}
+
+function serialize_creature_style(&$level) {
 	foreach ($level["creatures"] as &$creature) {
 		$id = $creature["id"];
 		$pos = $creature["position"];
@@ -173,7 +189,6 @@ function serialize_style(&$level) {
 		}
 	}
 
-
 	$key_ok = ".cs.key:checked";
 	$key_ko = ".cs:not(.key):checked";
 	$keys = $level["keys"];
@@ -191,19 +206,25 @@ function serialize_style(&$level) {
 		echo "#inv .hp:nth-child({$num}) { animation: hp-remove 800ms both; }";
 	}
 
-	for ($i=0;$i<$keys;$i++) {  // victory
-		for ($j=0;$j<=$i;$j++) { echo "{$key_ok} ~ "; }
-		echo "#nav label { display: none !important }";
-		for ($j=0;$j<=$i;$j++) { echo "{$key_ok} ~ "; }
-		echo "#nav #victory { display: initial }";
-	}
+	// victory
+	for ($i=0;$i<$keys;$i++) { echo "{$key_ok} ~ "; }  // hide labels
+	echo "#nav label { display: none !important }";
+	for ($i=0;$i<$keys;$i++) { echo "{$key_ok} ~ "; }  // show victory
+	echo "#nav #victory { display: initial }";
 
-	for ($i=0;$i<$hp;$i++) {  // gameover
-		for ($j=0;$j<=$i;$j++) { echo "{$key_ko} ~ "; }
-		echo "#nav label { display: none !important }";
-		for ($j=0;$j<=$i;$j++) { echo "{$key_ko} ~ "; }
-		echo "#nav #gameover { display: initial }";
-	}
+	// gameover
+	for ($i=0;$i<$hp;$i++) {  echo "{$key_ko} ~ "; }
+	echo "#nav label { display: none !important }";  // hide labels
+	for ($i=0;$i<$hp;$i++) {  echo "{$key_ko} ~ "; }  // show gameover
+	echo "#nav #gameover { display: initial }";
+}
+
+function serialize_style(&$level) {
+	echo "<style>";
+
+	serialize_level_style($level);
+	serialize_gold_style($level);
+	serialize_creature_style($level);
 
 	echo "</style>";
 }
