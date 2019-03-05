@@ -1,21 +1,26 @@
 #nav {
+	@nav-height: 10em * @lh;
+	@mid: 4em * @lh;
+
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
 	position: relative;
+	font-size: 200%;
 
-	@label-size: 2;
-	@nav-height: 10em * @lh;
-	min-height: @nav-height * @label-size;
-	@mid: 4em * @lh;
+	min-height: @nav-height;
+	width: 25ch;
 
-	#victory, #gameover { display: none; } 
+	#victory, #gameover { 
+		font-size: 1rem;
+		display: none;
+	}
 
 	label { 
 		display: none;
 		position: absolute;
 		&::after { position: absolute; }
-		font-size: @label-size * 100%;
+		white-space: nowrap;
 	}
 
 	.left, .right {

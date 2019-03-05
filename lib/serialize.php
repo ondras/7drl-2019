@@ -72,7 +72,7 @@ function serialize_map(&$level) {
 	foreach ($level["creatures"] as &$creature) {
 		$id = $creature["id"];
 		$name = $creature["name"];
-		echo "<span class='c' id='c{$id}' title='{$name}'>{$creature['letter']}</span>";
+		echo "<span class='c' id='c{$id}' title='{$name}'>{$creature['letter']}*</span>";
 	}
 
 	echo "<span id='pc' title='You!'>@</span>";
@@ -80,7 +80,6 @@ function serialize_map(&$level) {
 }
 
 function serialize_inv(&$level) {
-
 	echo "<section id='inv'>";
 	echo "<div>Health: ";
 	$hp = $level["hp"];
@@ -89,7 +88,7 @@ function serialize_inv(&$level) {
 
 	echo "Keys: ";
 	$keys = $level["keys"];
-	for ($i=0;$i<$keys;$i++) { echo "<span class='key'>⚷♂♀</span>"; }
+	for ($i=0;$i<$keys;$i++) { echo "<span class='key'>⚷</span>"; }
 	echo "</div><div>";
 	echo "Gold: ";
 	echo "<span class='gold-count'></span></div>";
@@ -181,7 +180,7 @@ function serialize_creature_style(&$level) {
 
 		$x = $pos[0]+1; $y = $pos[1]+1;
 		echo "#c{$id} { left: {$x}ch; top: {$y}em; }"; // creature position
-		echo "{$dead} ~ #map #c{$id} { display: none }"; // dead creatures not visible
+		echo "{$dead} ~ #map #c{$id} { animation: corpse 3000ms both }"; // dead creatures not visible
 
 		$diffs = array(
 			"right" => array(-1, 0),
@@ -210,13 +209,13 @@ function serialize_creature_style(&$level) {
 	for ($i=0;$i<$keys;$i++) {  // key fade in
 		$num = $i+1;
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ok} ~ "; }
-		echo "#inv .key:nth-child({$num}) { animation: key-add 800ms both; }";
+		echo "#inv .key:nth-child({$num}) { animation: key-add 800ms both }";
 	}
 
 	for ($i=0;$i<$hp;$i++) {  // hp fade out
 		$num = $hp-$i;
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ko} ~ "; }
-		echo "#inv .hp:nth-child({$num}) { animation: hp-remove 800ms both; }";
+		echo "#inv .hp:nth-child({$num}) { animation: hp-remove 800ms both }";
 	}
 
 	// victory
@@ -247,8 +246,8 @@ function serialize_level(&$level) {
 	serialize_state($level);
 	serialize_intro($level);
 	serialize_map($level);
-	serialize_nav($level);
 	serialize_inv($level);
+	serialize_nav($level);
 	echo "</section>";
 	serialize_style($level);
 }

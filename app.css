@@ -95,6 +95,22 @@ footer {
   text-decoration: underline;
   transition: all 100ms;
 }
+#map .c {
+  width: 1ch;
+  overflow: hidden;
+}
+@keyframes corpse {
+  0% {
+    text-indent: -1ch;
+    opacity: 1;
+    color: red;
+  }
+  100% {
+    text-indent: -1ch;
+    opacity: 0;
+    color: red;
+  }
+}
 #inv {
   font-size: 200%;
 }
@@ -103,12 +119,15 @@ footer {
   display: inline-block;
 }
 #inv .key {
-  color: #222;
+  color: #333;
 }
 #inv .hp {
   color: red;
 }
 @keyframes key-add {
+  0% {
+    transform: scale(1);
+  }
   50% {
     transform: scale(3);
     color: lime;
@@ -119,12 +138,15 @@ footer {
   }
 }
 @keyframes hp-remove {
+  0% {
+    transform: scale(1);
+  }
   50% {
     transform: scale(3);
   }
   100% {
     transform: scale(1);
-    color: #222;
+    color: #333;
   }
 }
 #nav {
@@ -132,16 +154,19 @@ footer {
   -moz-user-select: none;
   user-select: none;
   position: relative;
-  min-height: 26em;
+  font-size: 200%;
+  min-height: 13em;
+  width: 25ch;
 }
 #nav #victory,
 #nav #gameover {
+  font-size: 1rem;
   display: none;
 }
 #nav label {
   display: none;
   position: absolute;
-  font-size: 200%;
+  white-space: nowrap;
 }
 #nav label::after {
   position: absolute;
