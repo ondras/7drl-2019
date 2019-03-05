@@ -82,18 +82,17 @@ function serialize_map(&$level) {
 function serialize_inv(&$level) {
 
 	echo "<section id='inv'>";
-	echo "Health: ";
+	echo "<div>Health: ";
 	$hp = $level["hp"];
 	for ($i=0;$i<$hp;$i++) { echo "<span class='hp'>♥</span>"; }
-	echo "<br/>";
+	echo "</div><div>";
 
 	echo "Keys: ";
 	$keys = $level["keys"];
 	for ($i=0;$i<$keys;$i++) { echo "<span class='key'>⚷♂♀</span>"; }
-	echo "<br/>";
-
+	echo "</div><div>";
 	echo "Gold: ";
-	echo "<span class='gold-count'></span>";
+	echo "<span class='gold-count'></span></div>";
 	echo "</section>";
 }
 
@@ -209,7 +208,7 @@ function serialize_creature_style(&$level) {
 	$hp = $level["hp"];
 
 	for ($i=0;$i<$keys;$i++) {  // key fade in
-		$num = $j+1;
+		$num = $i+1;
 		for ($j=0;$j<=$i;$j++) { echo "{$key_ok} ~ "; }
 		echo "#inv .key:nth-child({$num}) { animation: key-add 800ms both; }";
 	}

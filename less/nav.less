@@ -4,17 +4,22 @@
 	user-select: none;
 	position: relative;
 
+	@label-size: 2;
+	@nav-height: 10em * @lh;
+	min-height: @nav-height * @label-size;
+	@mid: 4em * @lh;
+
 	#victory, #gameover { display: none; } 
 
 	label { 
 		display: none;
 		position: absolute;
 		&::after { position: absolute; }
-		font-size: 200%;
+		font-size: @label-size * 100%;
 	}
 
 	.left, .right {
-		top: 50%;
+		top: @mid;
 		transform: translate(0, -50%);
 
 		&::after {
@@ -25,7 +30,7 @@
 
 	.left {
 		text-align: right;
-		right: calc(50% + 1ch);
+		right: calc(50% + 1.5ch);
 		padding-right: 2ch;
 
 		&::after {
@@ -36,7 +41,7 @@
 
 	.right {
 		text-align: left;
-		left: calc(50% + 1ch);
+		left: calc(50% + 1.5ch);
 		padding-left: 2ch;
 
 		&::after {
@@ -57,7 +62,7 @@
 	}
 
 	.up {
-		bottom: calc(50% + 0.5em);
+		bottom: calc(@nav-height - @mid + 0.5em);
 		padding-bottom: 1em;
 
 		&::after {
@@ -67,13 +72,20 @@
 	}
 
 	.down {
-		top: calc(50% + 0.5em);
+		top: calc(@mid + 0.5em);
 		padding-top: 1em;
 
 		&::after {
 			top: 0;
 			content: "▼";
 		}
+	}
+
+	.pick {
+		left: 50%;
+		top: calc(@mid + 4em*@lh);
+		transform: translate(-50%, 0);
+		text-align: center;
 	}
 
 	#victory {

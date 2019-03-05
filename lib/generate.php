@@ -37,6 +37,10 @@ function generate_gold($number) {
 		"id" => id(),
 		"position" => array(3, 2)
 	);
+	$gold[] = array(
+		"id" => id(),
+		"position" => array(3, 1)
+	);
 	return $gold;
 }
 
