@@ -41,8 +41,9 @@ function serialize_state(&$level) {
 
 function serialize_intro(&$level) {
 	echo "<header>";
+	echo "<h1>Level " . $level["number"] . "</h1>";
 	echo $level["intro"];
-	echo "<label for='intro'>Play</label>";
+	echo "<p><strong><label for='intro'>Let's go!</label></strong></p>";
 	echo "</header>";
 }
 

@@ -10,6 +10,20 @@ function id() {
 	return $counter++;
 }
 
+function free_position(&$level) {
+	$w = $level["size"][0];
+	$h = $level["size"][1];
+	while (1) {
+		$x = mt_rand(0, $w-1);
+		$y = mt_rand(0, $h-1);
+		$key = "{$x},{$y}";
+		if (in_array($key, $level["used"])) { continue; }
+
+		$level["used"][] = $key;
+		return array($x, $y);
+	}
+}
+
 function creature_from_template($name, $position) {
 	global $creature_templates;
 	$t = $creature_templates[$name];
@@ -29,48 +43,72 @@ function creature_from_template($name, $position) {
 	return $c;
 }
 
-function generate_creatures($number) {
+function generate_creatures(&$level) {
+	global $creature_templates;
+
+	$names = array_keys($creature_templates);
+	shuffle($names);
+	$half = floor(count($names)/2);
+
+	$templates_ok = array_slice($names, 0, $half);
+	$templates_ko = array_slice($names, $half);
+	foreach ($templates_ok as $name) { $creature_templates[$name]["key"] = true; }
+	foreach ($templates_ko as $name) { $creature_templates[$name]["key"] = false; }
+
 	$creatures = array();
-	$creatures[] = creature_from_template("goblin", array(3, 2));
-	$creatures[] = creature_from_template("orc", array(7, 2));
-	$creatures[] = creature_from_template("bat", array(7, 3));
-	$creatures[] = creature_from_template("kobold", array(3, 1));
 
-	return $creatures;
+	$test = array("goblin", "orc", "bat", "kobold");
+	foreach ($test as $name) {
+		$pos = free_position($level);
+		$creatures[] = creature_from_template($name, $pos);
+		if (mt_rand(0, 1)) {  // has gold
+			$level["gold"][] = array(
+				"id" => id(),
+				"position" => $pos
+			);
+		}
+	}
+
+	$level["creatures"] = $creatures;
 }
 
-function generate_gold($number) {
+function generate_gold(&$level) {
+	$count = $level["number"];
 	$gold = array();
-	$gold[] = array(
-		"id" => id(),
-		"position" => array(4, 2)
-	);
-	$gold[] = array(
-		"id" => id(),
-		"position" => array(3, 2)
-	);
-	$gold[] = array(
-		"id" => id(),
-		"position" => array(3, 1)
-	);
-	return $gold;
+
+	for ($i=0;$i<$count;$i++) {
+		$pos = free_position($level);
+		$gold[] = array(
+			"id" => id(),
+			"position" => $pos
+		);
+	}
+
+	$level["gold"] = $gold;
 }
 
-function generate_intro($number) {
-	return  "This is intro."; // fixme
+function generate_pc(&$level) {
+	$level["pc"] = free_position($level); 
+}
+
+function generate_intro(&$level) {
+	$level["intro"] = "<p>Welcome.</p>"; // fixme
 }
 
 function generate_level($number, $seed) {
 	mt_srand($seed + $number);
 	$level = array();
 
-	$level["hp"] = 2;
-	$level["keys"] = 2;
-	$level["intro"] = generate_intro($number);
-	$level["size"] = array(11, 5);
-	$level["pc"] = array(floor($level["size"][0]/2), floor($level["size"][1]/2));
-	$level["creatures"] = generate_creatures($number);
-	$level["gold"] = generate_gold($number);
+	$level["used"] = array();
+	$level["number"] = $number;
+	$level["hp"] = 3;
+	$level["keys"] = min($number, 3);
+	$level["size"] = array(11, 5); // fixme
+
+	generate_intro($level);
+	generate_gold($level);
+	generate_creatures($level);
+	generate_pc($level);
 
 	$url_reload = "?seed={$seed}&amp;level={$number}";
 	$url_new = ".";

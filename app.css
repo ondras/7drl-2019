@@ -251,6 +251,9 @@ footer {
 #intro:checked ~ header {
   display: none;
 }
+header h1 {
+  margin: 0;
+}
 #welcome {
   margin: 1em auto 0;
   width: calc(100% - 2ch);
