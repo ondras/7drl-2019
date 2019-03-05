@@ -12,15 +12,3 @@ Visuals:
 #c*, .c = creature
 #g*, .g = gold
 .left, .right, .up, .down, .pick = navigation buttons
-
-
---- OLD BELOW ---
-
-#i* = item (visual)
-#is* = item state (input)
-
-#cd* = creature dialog (visual)
-#cds* = creature dialog state
-
-#ii* = item in inventory
-

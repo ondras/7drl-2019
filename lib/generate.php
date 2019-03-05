@@ -1,6 +1,8 @@
 <?php
 
 define("LEVELS", 2);
+include "color.php";
+include "creatures.php";
 
 $counter = 0;
 function id() {
@@ -8,22 +10,32 @@ function id() {
 	return $counter++;
 }
 
+function creature_from_template($name, $position) {
+	global $creature_templates;
+	$t = $creature_templates[$name];
+	$c = array(
+		"id" => id(),
+		"letter" => $t["letter"],
+		"name" => $t["name"],
+		"position" => $position,
+		"key" => $t["key"]
+	);
+
+	if (mt_rand(0, 1) == 0) {
+		$c["letter"] = strtoupper($c["letter"]);
+	}
+
+	$c["color"] = expand_color($t["color"]);
+	return $c;
+}
+
 function generate_creatures($number) {
 	$creatures = array();
-	$creatures[] = array(
-		"id" => id(),
-		"letter" => "g",
-		"name" => "Goblin",
-		"key" => true,
-		"position" => array(3, 2)
-	);
-	$creatures[] = array(
-		"id" => id(),
-		"letter" => "o",
-		"name" => "Orc",
-		"key" => false,
-		"position" => array(7, 2)
-	);
+	$creatures[] = creature_from_template("goblin", array(3, 2));
+	$creatures[] = creature_from_template("orc", array(7, 2));
+	$creatures[] = creature_from_template("bat", array(7, 3));
+	$creatures[] = creature_from_template("kobold", array(3, 1));
+
 	return $creatures;
 }
 

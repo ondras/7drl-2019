@@ -11,7 +11,7 @@ body {
 label,
 a {
   text-decoration: none;
-  background: linear-gradient(to right, dodgerblue, dodgerblue) no-repeat;
+  background: linear-gradient(0, dodgerblue, dodgerblue) no-repeat;
   background-position: 0 90%;
   background-size: 100% 1px;
   color: inherit;
@@ -63,6 +63,8 @@ footer {
 }
 #game {
   padding: 1em 1ch 0;
+  margin: 0 auto;
+  max-width: 100ch;
   min-height: calc(100vh - 2em*1.3);
   counter-reset: gold;
 }
@@ -92,7 +94,7 @@ footer {
 }
 #map #pc {
   color: dodgerblue;
-  text-decoration: underline;
+  font-weight: bold;
   transition: all 100ms;
 }
 #map .c {
@@ -120,6 +122,8 @@ footer {
 }
 #inv .key {
   color: #333;
+  width: 1ch;
+  text-align: center;
 }
 #inv .hp {
   color: red;

@@ -66,7 +66,7 @@ function serialize_map(&$level) {
 
 	foreach ($level["gold"] as &$gold) {
 		$id = $gold["id"];
-		echo "<span class='g' id='g{$id}'>$</span>";
+		echo "<span class='g' id='g{$id}' title='Gold'>$</span>";
 	}
 
 	foreach ($level["creatures"] as &$creature) {
@@ -175,11 +175,12 @@ function serialize_creature_style(&$level) {
 	foreach ($level["creatures"] as &$creature) {
 		$id = $creature["id"];
 		$pos = $creature["position"];
+		$color = $creature["color"];
 		$alive = "#cs{$id}:not(:checked)";
 		$dead = "#cs{$id}:checked";
 
 		$x = $pos[0]+1; $y = $pos[1]+1;
-		echo "#c{$id} { left: {$x}ch; top: {$y}em; }"; // creature position
+		echo "#c{$id} { left: {$x}ch; top: {$y}em; color: {$color}; }"; // creature position and color
 		echo "{$dead} ~ #map #c{$id} { animation: corpse 3000ms both }"; // dead creatures not visible
 
 		$diffs = array(
