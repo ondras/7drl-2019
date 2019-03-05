@@ -33,6 +33,10 @@ footer {
   text-align: center;
   margin-bottom: 1.3em;
 }
+.gold-count::after {
+  content: counter(gold);
+  color: gold;
+}
 @font-face {
   font-family: input;
   font-weight: normal;

@@ -82,14 +82,18 @@ function serialize_map(&$level) {
 function serialize_inv(&$level) {
 
 	echo "<section id='inv'>";
-	echo "<div>Health: ";
+	echo "Health: ";
 	$hp = $level["hp"];
 	for ($i=0;$i<$hp;$i++) { echo "<span class='hp'>♥</span>"; }
+	echo "<br/>";
 
-	echo "</div><div>Keys: ";
+	echo "Keys: ";
 	$keys = $level["keys"];
 	for ($i=0;$i<$keys;$i++) { echo "<span class='key'>⚷♂♀</span>"; }
-	echo "</div>";
+	echo "<br/>";
+
+	echo "Gold: ";
+	echo "<span class='gold-count'></span>";
 	echo "</section>";
 }
 
@@ -122,6 +126,11 @@ function serialize_nav(&$level) {
 		echo "<label for='cs{$id}' class='down'>{$label}</label>";
 	}
 
+	foreach ($level["gold"] as &$gold) {
+		$id = $gold["id"];
+		echo "<label for='gs{$id}' class='pick'>Pick up gold</label>";
+	}
+
 	echo "<div id='victory'>" . $level["victory"] . "</div>";
 	echo "<div id='gameover'>" . $level["gameover"] . "</div>";
 	echo "</section>";
@@ -150,12 +159,17 @@ function serialize_level_style(&$level) {
 function serialize_gold_style(&$level) {
 	foreach ($level["gold"] as &$gold) {
 		$id = $gold["id"];
+		echo "#gs{$id}:checked ~ #map #g{$id} { display: none }"; // picked gold not visible
+		echo "#gs{$id}:checked { counter-increment: gold }"; // gold counter
+
 		$pos = $gold["position"];
+		$x = $pos[0];
+		$y = $pos[1];
+		echo "#gs{$id}:not(:checked) ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=gs{$id}] { display: initial }"; // gold pick
+
 		$x = $pos[0]+1;
 		$y = $pos[1]+1;
 		echo "#g{$id} { left: {$x}ch; top: {$y}em; }"; // gold position
-		echo "#gs{$id}:checked ~ #map #g{$id} { display: none }"; // picked gold not visible
-		echo "#gs{$id}:checked { counter-increment: gold }"; // gold counter
 	}
 }
 

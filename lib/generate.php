@@ -67,7 +67,7 @@ function generate_level($number, $seed) {
 							<p>Your quest is over now, but if you seek additional thrill and adventure, you are free to study this game's <a href='http://github.com/ondras/7drl-2019'>source code</a>.</p>";
 	} else {
 		$url_next = "?seed={$seed}&amp;level={$next}";
-		$level["victory"] = "<p>Good job! You managed to retrieve all keys, gathering <span class='gold'></span> gold in the process. Please continue to the <a href='{$url_next}'>next level</a> immediately.";
+		$level["victory"] = "<p>Good job! You managed to retrieve all keys, gathering <span class='gold-count'></span> gold in the process. Please continue to the <a href='{$url_next}'>next level</a> immediately.";
 	}
 
 	return $level;

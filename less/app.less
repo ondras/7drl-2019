@@ -36,6 +36,11 @@ footer {
 	margin-bottom: @lh*1em;
 }
 
+.gold-count::after {
+	content: counter(gold);
+	color: gold;
+}
+
 @lh: 1.3;
 @import "font.less";
 @import "game.less";
