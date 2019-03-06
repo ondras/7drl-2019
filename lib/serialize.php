@@ -1,5 +1,25 @@
 <?php
 
+/*
+
+Inputs:
+
+#intro = intro state
+
+#cs*, .cs, .key = creature state
+#x* = x position
+#y* = y position
+#gs* = gold state
+
+Visuals:
+
+#c*, .c = creature
+#g*, .g = gold
+.left, .right, .up, .down, .pick = navigation buttons
+
+*/
+
+
 function input($type, $id, $attrs = array()) {
 	echo "<input autocomplete='off' type='{$type}' id='{$id}' ";
 	foreach ($attrs as $k=>$v) { echo "{$k}='{$v}' "; }
