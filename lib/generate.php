@@ -1,6 +1,6 @@
 <?php
 
-define("LEVELS", 2);
+define("LEVELS", 6);
 include "color.php";
 include "creatures.php";
 
@@ -10,12 +10,17 @@ function id() {
 	return $counter++;
 }
 
-function free_position(&$level) {
+function free_position(&$level, $force = false) {
 	$w = $level["size"][0];
 	$h = $level["size"][1];
 	while (1) {
 		$x = mt_rand(0, $w-1);
 		$y = mt_rand(0, $h-1);
+		if ($force) {
+			$x = $force[0];
+			$y = $force[1];
+			$force = false;
+		}
 		$key = "{$x},{$y}";
 		if (in_array($key, $level["used"])) { continue; }
 
@@ -35,7 +40,7 @@ function creature_from_template($name, $position) {
 		"key" => $t["key"]
 	);
 
-	if (mt_rand(0, 1) == 0) {
+	if (mt_rand(0, 1)) {
 		$c["letter"] = strtoupper($c["letter"]);
 	}
 
@@ -56,43 +61,131 @@ function generate_creatures(&$level) {
 	foreach ($templates_ko as $name) { $creature_templates[$name]["key"] = false; }
 
 	$creatures = array();
+	$number = $level["number"];
+	switch ($number) {
+		case 1:
+			$pos = free_position($level);
+			$creatures[] = creature_from_template($templates_ok[0], $pos);
+			$pos = free_position($level);
+			$creatures[] = creature_from_template($templates_ko[0], $pos);
+		break;
 
+		case 2:
+			$pos = free_position($level);
+			$creatures[] = creature_from_template($templates_ok[0], $pos);
+			$pos = free_position($level);
+			$creatures[] = creature_from_template($templates_ok[1], $pos);
+
+			$pos = free_position($level);
+			$creatures[] = creature_from_template($templates_ko[0], $pos);
+			$pos = free_position($level);
+			$creatures[] = creature_from_template($templates_ko[0], $pos);
+		break;
+
+		default:
+			for ($i=0;$i<3;$i++) {
+				$pos = free_position($level);
+				$idx = array_rand($templates_ok);
+				$creatures[] = creature_from_template($templates_ok[$idx], $pos);
+			}
+			for ($i=0;$i<$number;$i++) {
+				$pos = free_position($level);
+				$idx = array_rand($templates_ko);
+				$creatures[] = creature_from_template($templates_ko[$idx], $pos);
+			}
+		break;
+	}
+
+	foreach ($creatures as &$creature) {
+		if (mt_rand(0, 1)) {  // has gold
+			$level["gold"][] = array(
+				"id" => id(),
+				"position" => $creature["position"]
+			);
+		}
+	}
+
+/*
 	$test = array("goblin", "orc", "bat", "kobold");
 	foreach ($test as $name) {
 		$pos = free_position($level);
 		$creatures[] = creature_from_template($name, $pos);
-		if (mt_rand(0, 1)) {  // has gold
-			$level["gold"][] = array(
-				"id" => id(),
-				"position" => $pos
-			);
-		}
 	}
+*/
 
 	$level["creatures"] = $creatures;
 }
 
 function generate_gold(&$level) {
-	$count = $level["number"];
+	$number = $level["number"];
 	$gold = array();
 
-	for ($i=0;$i<$count;$i++) {
-		$pos = free_position($level);
-		$gold[] = array(
-			"id" => id(),
-			"position" => $pos
-		);
+	switch ($number) {
+		case 1:
+			$x = $level["size"][0]-1;
+			$y = $level["size"][1]-1;
+			$pos = free_position($level, array($x, $y));
+			$gold[] = array(
+				"id" => id(),
+				"position" => $pos
+			);
+		break;
+
+		default:
+			for ($i=0;$i<$number;$i++) {
+				$pos = free_position($level);
+				$gold[] = array(
+					"id" => id(),
+					"position" => $pos
+				);
+			}
+		break;
 	}
 
 	$level["gold"] = $gold;
 }
 
 function generate_pc(&$level) {
-	$level["pc"] = free_position($level); 
+	$x = floor($level["size"][0]/2);
+	$y = floor($level["size"][1]/2);
+	$level["pc"] = free_position($level, array($x, $y));
 }
 
 function generate_intro(&$level) {
-	$level["intro"] = "<p>Welcome.</p>"; // fixme
+	$str = "";
+	switch ($level["number"]) {
+		case 1:
+			$str = "<p>The evil General Sibling Selector has locked you in his underground prison. You are now located in the first dungeon level.</p>
+					<p>To escape, you need to find a key. Keys are always held by monsters, so to get one, you will need to fight.</p>
+					<p>Please click/touch the navigation controls to move around, pick stuff and attack monsters. (Remember: this is a no-JavaScript game, so the interaction is severly limited.)</p>";
+		break;
+
+		case 2:
+			$hp = $level["hp"];
+			$str = "<p>You managed to get to the second level. You will need to get two keys to continue.</p>
+					<p>You might have already noticed that not all monsters drop keys; some can damage you instead. You only have {$hp} lives, so take care.</p>";
+		break;
+
+		case 3:
+			$str = "<p>Further levels will always require three keys to escape.</p>
+					<p>The General Sibling Selector has locked more enemy creatures in these cells, so be careful when deciding what to fight.</p>";
+		break;
+
+		case 4:
+			$str = "<p>We are currently running out of tutorial topics. You seem to be completely familiar with all aspects of this game.</p>
+					<p>If you are feeling adventurous, try to pick as many gold pieces as you can when roaming through the level.</p>";
+		break;
+
+		case 5:
+			$str = "<p>You might be interested in the fact that this game can be actually won, so the number of levels created by the General Sibling Selector is finite.</p>
+					<p>The end is near!</p>";
+		break;
+
+		case 6:
+			$str = "<p>This could be a good time for a little snack, what do you think? Do yourself a favor and prepare a cup of tea or coffee; maybe with a cookie or an apple or a small piece of lutefisk?</p>";
+		break;
+	}
+	$level["intro"] = $str;
 }
 
 function generate_level($number, $seed) {
@@ -106,14 +199,13 @@ function generate_level($number, $seed) {
 	$level["size"] = array(11, 5); // fixme
 
 	generate_intro($level);
+	generate_pc($level);
 	generate_gold($level);
 	generate_creatures($level);
-	generate_pc($level);
 
 	$url_reload = "?seed={$seed}&amp;level={$number}";
-	$url_new = ".";
 	$level["gameover"] = "<p><strong>Game over!</strong> You have lost all your health. Try to fight those creatures that leave keys in order to finish the level.</p>
-							<p>You can try <a href='{$url_reload}'>reloading</a> this level or starting a <a href='{$url_new}'>new game</a>.</p>";
+							<p>You can try <a href='{$url_reload}'>reloading</a> this level or starting a <a href='.'>new game</a>.</p>";
 
 	$next = $number+1;
 	if ($next > LEVELS) {
