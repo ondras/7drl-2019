@@ -151,6 +151,30 @@ function generate_pc(&$level) {
 	$level["pc"] = free_position($level, array($x, $y));
 }
 
+function generate_walls(&$level) {
+	$walls = array();
+	$size = $level["size"];
+
+	$walls[] = array(
+		"id" => id(),
+		"position" => free_position($level, array(0, 0))
+	);
+	$walls[] = array(
+		"id" => id(),
+		"position" => free_position($level, array($size[0]-1, 0))
+	);
+	$walls[] = array(
+		"id" => id(),
+		"position" => free_position($level, array(0, $size[1]-1))
+	);
+	$walls[] = array(
+		"id" => id(),
+		"position" => free_position($level, array($size[0]-1, $size[1]-1))
+	);
+
+	$level["walls"] = $walls;
+}
+
 function generate_intro(&$level) {
 	$str = "";
 	switch ($level["number"]) {
@@ -200,6 +224,7 @@ function generate_level($number, $seed) {
 
 	generate_intro($level);
 	generate_pc($level);
+	generate_walls($level);
 	generate_gold($level);
 	generate_creatures($level);
 

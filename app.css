@@ -12,8 +12,8 @@ label,
 a {
   text-decoration: none;
   background: linear-gradient(0, dodgerblue, dodgerblue) no-repeat;
-  background-position: 0 90%;
-  background-size: 100% 1px;
+  background-position: 0 95%;
+  background-size: 100% 2px;
   color: inherit;
   cursor: pointer;
   border-radius: 4px;
@@ -85,7 +85,8 @@ footer {
 }
 #map .c,
 #map .g,
-#map #pc {
+#map #pc,
+#map .wall[id] {
   position: absolute;
   background-color: black;
 }

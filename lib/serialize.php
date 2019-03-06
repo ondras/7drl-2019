@@ -14,11 +14,35 @@ Inputs:
 Visuals:
 
 #c*, .c = creature
+#w* = wall
 #g*, .g = gold
 .left, .right, .up, .down, .pick = navigation buttons
 
 */
 
+define("DIFFS", array(
+	"right" => array(-1, 0),
+	"left" => array(1, 0),
+	"down" => array(0, -1),
+	"up" => array(0, 1),
+));
+
+
+function block_movement($condition, $position) {
+	foreach (DIFFS as $dir => $delta) {
+		$x = $position[0]+$delta[0];
+		$y = $position[1]+$delta[1];
+		echo "{$condition} #x{$x}:checked ~ #y{$y}:checked ~ #nav .{$dir} { display: none }"; 
+	}
+}
+
+function position($id, $position, $attrs = array()) {
+	$x = $position[0]+1;
+	$y = $position[1]+1;
+	echo "#{$id} { left: {$x}ch; top: {$y}em; ";
+	foreach ($attrs as $k=>$v) { echo "{$k}: {$v}; "; }
+	echo "}";
+}
 
 function input($type, $id, $attrs = array()) {
 	echo "<input autocomplete='off' type='{$type}' id='{$id}' ";
@@ -26,8 +50,10 @@ function input($type, $id, $attrs = array()) {
 	echo "/>";
 }
 
-function wall($len) {
-	echo "<span class='wall' title='Solid wall'>";
+function wall($len, $id = false) {
+	echo "<span ";
+	if ($id) { echo "id='{$id}' "; }
+	echo "class='wall' title='Solid wall'>";
 	for ($i=0;$i<$len;$i++) { echo "#"; }
 	echo "</span>";
 }
@@ -73,7 +99,6 @@ function serialize_map(&$level) {
 
 	wall($size[0]+2);
 	echo "<br/>";
-	
 	for ($y=0; $y<$size[1]; $y++) {
 		wall(1);
 		echo "<span class='cell'>";
@@ -82,12 +107,16 @@ function serialize_map(&$level) {
 		wall(1);
 		echo "<br/>";
 	}
-
 	wall($size[0]+2);
 
 	foreach ($level["gold"] as &$gold) {
 		$id = $gold["id"];
 		echo "<span class='g' id='g{$id}' title='Gold'>$</span>";
+	}
+
+	foreach ($level["walls"] as &$wall) {
+		$id = $wall["id"];
+		wall(1, "w{$id}");
 	}
 
 	foreach ($level["creatures"] as &$creature) {
@@ -186,9 +215,16 @@ function serialize_gold_style(&$level) {
 		$y = $pos[1];
 		echo "#gs{$id}:not(:checked) ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=gs{$id}] { display: initial }"; // gold pick
 
-		$x = $pos[0]+1;
-		$y = $pos[1]+1;
-		echo "#g{$id} { left: {$x}ch; top: {$y}em; }"; // gold position
+		position("g{$id}", $pos);
+	}
+}
+
+function serialize_wall_style(&$level) {
+	foreach ($level["walls"] as &$wall) {
+		$id = $wall["id"];
+		$pos = $wall["position"];
+		position("w{$id}", $pos);
+		block_movement("", $pos);
 	}
 }
 
@@ -200,25 +236,13 @@ function serialize_creature_style(&$level) {
 		$alive = "#cs{$id}:not(:checked)";
 		$dead = "#cs{$id}:checked";
 
-		$x = $pos[0]+1; $y = $pos[1]+1;
-		echo "#c{$id} { left: {$x}ch; top: {$y}em; color: {$color}; }"; // creature position and color
 		echo "{$dead} ~ #map #c{$id} { animation: corpse 3000ms both }"; // dead creatures not visible
+		position("c{$id}", $pos, array("color" => $color));
+		block_movement("{$alive} ~", $pos); // cannot move here
 
-		$diffs = array(
-			"right" => array(-1, 0),
-			"left" => array(1, 0),
-			"down" => array(0, -1),
-			"up" => array(0, 1),
-		);
-
-		foreach ($diffs as $dir => $delta) {
+		foreach (DIFFS as $dir => $delta) { // can attack here
 			$x = $pos[0]+$delta[0];
 			$y = $pos[1]+$delta[1];
-
-			// cannot move here
-			echo "{$alive} ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav .{$dir} { display: none }"; 
-
-			// can attack here
 			echo "{$alive} ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=cs{$id}].{$dir} { display: initial }"; 
 		}
 	}
@@ -257,6 +281,7 @@ function serialize_style(&$level) {
 	echo "<style>";
 
 	serialize_level_style($level);
+	serialize_wall_style($level);
 	serialize_gold_style($level);
 	serialize_creature_style($level);
 
