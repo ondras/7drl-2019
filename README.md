@@ -1,1 +1,1 @@
-# The Curse of the General Sibling Selector
+# The Curse of the General Sibling Combinator

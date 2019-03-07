@@ -179,7 +179,7 @@ function generate_intro(&$level) {
 	$str = "";
 	switch ($level["number"]) {
 		case 1:
-			$str = "<p>The evil General Sibling Selector has locked you in his underground prison. You are now located in the first dungeon level.</p>
+			$str = "<p>The evil General Sibling Combinator has locked you in his underground prison. You are now located in the first dungeon level.</p>
 					<p>To escape, you need to find a key. Keys are always held by monsters, so to get one, you will need to fight.</p>
 					<p>Please click/touch the navigation controls to move around, pick stuff and attack monsters. (Remember: this is a no-JavaScript game, so the interaction is severly limited.)</p>";
 		break;
@@ -192,7 +192,7 @@ function generate_intro(&$level) {
 
 		case 3:
 			$str = "<p>Further levels will always require three keys to escape.</p>
-					<p>The General Sibling Selector has locked more enemy creatures in these cells, so be careful when deciding what to fight.</p>";
+					<p>The General Sibling Combinator has locked more enemy creatures in these cells, so be careful when deciding what to fight.</p>";
 		break;
 
 		case 4:
@@ -201,7 +201,7 @@ function generate_intro(&$level) {
 		break;
 
 		case 5:
-			$str = "<p>You might be interested in the fact that this game can be actually won, so the number of levels created by the General Sibling Selector is finite.</p>
+			$str = "<p>You might be interested in the fact that this game can be actually won, so the number of levels created by the General Sibling Combinator is finite.</p>
 					<p>The end is near!</p>";
 		break;
 

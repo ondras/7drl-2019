@@ -6,7 +6,7 @@
 	$level = (isset($_GET["level"]) ? (int) $_GET["level"] : 0);
 	$seed = (isset($_GET["seed"]) ? (int) $_GET["seed"] : mt_rand());
 
-	$name = "The Curse of the General Sibling Selector";
+	$name = "The Curse of the General Sibling Combinator";
 	if ($level) {
 		$title = "Level {$level} &ndash; {$name}";
 		$level = generate_level($level, $seed);
