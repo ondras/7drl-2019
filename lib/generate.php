@@ -1,6 +1,6 @@
 <?php
 
-define("LEVELS", 6);
+define("LEVELS", 7);
 include "color.php";
 include "creatures.php";
 
@@ -48,50 +48,54 @@ function creature_from_template($name, $position) {
 	return $c;
 }
 
+function init_creatures() {
+	global $creature_templates;
+	shuffle($creature_templates);
+}
+
 function generate_creatures(&$level) {
 	global $creature_templates;
 
 	$names = array_keys($creature_templates);
-	shuffle($names);
 	$half = floor(count($names)/2);
 
-	$templates_ok = array_slice($names, 0, $half);
-	$templates_ko = array_slice($names, $half);
-	foreach ($templates_ok as $name) { $creature_templates[$name]["key"] = true; }
-	foreach ($templates_ko as $name) { $creature_templates[$name]["key"] = false; }
+	$names_ok = array_slice($names, 0, $half);
+	$names_ko = array_slice($names, $half);
+	foreach ($names_ok as $name) { $creature_templates[$name]["key"] = true; }
+	foreach ($names_ko as $name) { $creature_templates[$name]["key"] = false; }
 
 	$creatures = array();
 	$number = $level["number"];
 	switch ($number) {
 		case 1:
 			$pos = free_position($level);
-			$creatures[] = creature_from_template($templates_ok[0], $pos);
+			$creatures[] = creature_from_template($names_ok[0], $pos);
 			$pos = free_position($level);
-			$creatures[] = creature_from_template($templates_ko[0], $pos);
+			$creatures[] = creature_from_template($names_ko[0], $pos);
 		break;
 
 		case 2:
 			$pos = free_position($level);
-			$creatures[] = creature_from_template($templates_ok[0], $pos);
+			$creatures[] = creature_from_template($names_ok[0], $pos);
 			$pos = free_position($level);
-			$creatures[] = creature_from_template($templates_ok[1], $pos);
+			$creatures[] = creature_from_template($names_ok[1], $pos);
 
 			$pos = free_position($level);
-			$creatures[] = creature_from_template($templates_ko[0], $pos);
+			$creatures[] = creature_from_template($names_ko[0], $pos);
 			$pos = free_position($level);
-			$creatures[] = creature_from_template($templates_ko[0], $pos);
+			$creatures[] = creature_from_template($names_ko[0], $pos);
 		break;
 
 		default:
 			for ($i=0;$i<3;$i++) {
 				$pos = free_position($level);
-				$idx = array_rand($templates_ok);
-				$creatures[] = creature_from_template($templates_ok[$idx], $pos);
+				$idx = array_rand($names_ok);
+				$creatures[] = creature_from_template($names_ok[$idx], $pos);
 			}
 			for ($i=0;$i<$number;$i++) {
 				$pos = free_position($level);
-				$idx = array_rand($templates_ko);
-				$creatures[] = creature_from_template($templates_ko[$idx], $pos);
+				$idx = array_rand($names_ko);
+				$creatures[] = creature_from_template($names_ko[$idx], $pos);
 			}
 		break;
 	}
@@ -172,6 +176,14 @@ function generate_walls(&$level) {
 		"position" => free_position($level, array($size[0]-1, $size[1]-1))
 	);
 
+	$count = $level["number"];
+	for ($i=0;$i<$count;$i++) {
+		$walls[] = array(
+			"id" => id(),
+			"position" => free_position($level)
+		);
+	}
+
 	$level["walls"] = $walls;
 }
 
@@ -201,18 +213,26 @@ function generate_intro(&$level) {
 		break;
 
 		case 5:
+			$str = "<p>This could be a good time for a little snack, what do you think? Do yourself a favor and prepare a cup of tea or coffee; maybe with a cookie or an apple or a small piece of lutefisk?</p>";
+		break;
+
+		case 6:
 			$str = "<p>You might be interested in the fact that this game can be actually won, so the number of levels created by the General Sibling Combinator is finite.</p>
 					<p>The end is near!</p>";
 		break;
 
-		case 6:
-			$str = "<p>This could be a good time for a little snack, what do you think? Do yourself a favor and prepare a cup of tea or coffee; maybe with a cookie or an apple or a small piece of lutefisk?</p>";
+		case 7:
+			$str = "<p>Fun fact: this page contains more than 300 procedurally-generated CSS rulesets.</p>";
 		break;
 	}
 	$level["intro"] = $str;
 }
 
 function generate_level($number, $seed) {
+	$number = min($number, LEVELS);
+	mt_srand($seed);
+	init_creatures();
+
 	mt_srand($seed + $number);
 	$level = array();
 
@@ -220,7 +240,7 @@ function generate_level($number, $seed) {
 	$level["number"] = $number;
 	$level["hp"] = 3;
 	$level["keys"] = min($number, 3);
-	$level["size"] = array(11, 5); // fixme
+	$level["size"] = array(7 + 2*$number, 5 + floor($number/2)); // fixme
 
 	generate_intro($level);
 	generate_pc($level);
@@ -238,7 +258,7 @@ function generate_level($number, $seed) {
 							<p>Your quest is over now, but if you seek additional thrill and adventure, you are free to study this game's <a href='http://github.com/ondras/7drl-2019'>source code</a>.</p>";
 	} else {
 		$url_next = "?seed={$seed}&amp;level={$next}";
-		$level["victory"] = "<p>Good job! You managed to retrieve all keys, gathering <span class='gold-count'></span> gold in the process. Please continue to the <a href='{$url_next}'>next level</a> immediately.";
+		$level["victory"] = "<p>Good job! You managed to retrieve all keys, gathering <span class='gold-count'></span>&nbsp;gold in the process. Please continue to the <a href='{$url_next}'>next level</a> immediately.";
 	}
 
 	return $level;

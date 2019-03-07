@@ -6,14 +6,17 @@
 	-moz-user-select: none;
 	user-select: none;
 	position: relative;
+	float: right;
 	font-size: 200%;
 
 	min-height: @nav-height;
-	width: 25ch;
 
 	#victory, #gameover { 
-		font-size: 1rem;
+		font-size: 100% / @lh;
 		display: none;
+
+		p:first-child { margin-top: 0; }
+		p:last-child { margin-bottom: 0; }
 	}
 
 	label { 

@@ -136,11 +136,11 @@ function serialize_inv(&$level) {
 	for ($i=0;$i<$hp;$i++) { echo "<span class='hp'>♥</span>"; }
 	echo "</div><div>";
 
-	echo "Keys: ";
+	echo "Keys:   ";
 	$keys = $level["keys"];
 	for ($i=0;$i<$keys;$i++) { echo "<span class='key'>⚷</span>"; }
 	echo "</div><div>";
-	echo "Gold: ";
+	echo "Gold:   ";
 	echo "<span class='gold-count'></span></div>";
 	echo "</section>";
 }
@@ -202,6 +202,9 @@ function serialize_level_style(&$level) {
 		echo "#y{$i}:checked ~ #nav .up[for=y{$prev}] { display: initial }";  // up buttons
 		echo "#y{$i}:checked ~ #nav .down[for=y{$next}] { display: initial }";  // down buttons
 	}
+
+	$pad = $size[0] + 2 + 1;
+	echo "#nav { width: calc(100% - {$pad}ch) }";
 }
 
 function serialize_gold_style(&$level) {
@@ -292,9 +295,9 @@ function serialize_level(&$level) {
 	echo "<section id='game'>";
 	serialize_state($level);
 	serialize_intro($level);
+	serialize_nav($level);
 	serialize_map($level);
 	serialize_inv($level);
-	serialize_nav($level);
 	echo "</section>";
 	serialize_style($level);
 }

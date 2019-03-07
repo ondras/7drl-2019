@@ -13,6 +13,12 @@ $creature_templates = array(
 		"color" => array("h"=> array(70, 160), "s"=>array(80, 100), "v"=>90)
 	),
 
+	"harpy" => array(
+		"letter" => "h",
+		"name" => "Harpy",
+		"color" => array("h"=> array(160, 180), "s"=>array(80, 100), "v"=>array(80, 100))
+	),
+
 	"kobold" => array(
 		"letter" => "k",
 		"name" => "Kobold",
@@ -35,6 +41,12 @@ $creature_templates = array(
 		"letter" => "s",
 		"name" => "Snake",
 		"color" => array("h"=> array(70, 160), "s"=>array(80, 100), "v"=>70)
+	),
+
+	"wizard" => array(
+		"letter" => "w",
+		"name" => "Wizard",
+		"color" => array("h"=> array(0, 360), "s"=>array(80, 100), "v"=>array(80, 100))
 	),
 
 	"zombie" => array(
