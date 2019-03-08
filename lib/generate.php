@@ -225,7 +225,7 @@ function generate_intro(&$level) {
 		break;
 
 		case 3:
-			$str = "<p>Further levels will always require three keys to escape.</p>
+			$str = "<p>Further levels will always require <strong>three keys to escape.</strong></p>
 					<p>The General Sibling Combinator has locked more enemy creatures in these cells, so be careful when deciding what to fight.</p>";
 		break;
 
@@ -244,7 +244,7 @@ function generate_intro(&$level) {
 		break;
 
 		case 7:
-			$str = "<p>Fun fact: this page contains more than 300 procedurally-generated CSS rulesets.</p>";
+			$str = "<p>Fun fact: this page contains about 350 procedurally-generated CSS rulesets.</p>";
 		break;
 	}
 	$level["intro"] = $str;

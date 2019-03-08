@@ -29,12 +29,15 @@ define("DIFFS", array(
 	"up" => array(0, 1),
 ));
 
+define("HIDE", "display:none");
+define("DISABLE", "opacity:0.5; pointer-events:none;");
 
-function block_movement($condition, $position) {
+
+function block_movement($condition, $position, $style) {
 	foreach (DIFFS as $dir => $delta) {
 		$x = $position[0]+$delta[0];
 		$y = $position[1]+$delta[1];
-		echo "{$condition} #x{$x}:checked ~ #y{$y}:checked ~ #nav .{$dir} { display: none }"; 
+		echo "{$condition} #x{$x}:checked ~ #y{$y}:checked ~ #nav .{$dir} { {$style} }"; 
 	}
 }
 
@@ -231,7 +234,8 @@ function serialize_level_style(&$level) {
 function serialize_gold_style(&$level) {
 	foreach ($level["gold"] as &$gold) {
 		$id = $gold["id"];
-		echo "#gs{$id}:checked ~ #map #g{$id} { display: none }"; // picked gold not visible
+		$hide = HIDE;
+		echo "#gs{$id}:checked ~ #map #g{$id} { {$hide} }"; // picked gold not visible
 		echo "#gs{$id}:checked { counter-increment: gold }"; // gold counter
 
 		$pos = $gold["position"];
@@ -246,7 +250,8 @@ function serialize_gold_style(&$level) {
 function serialize_weapon_style(&$level) {
 	$weapon = $level["weapon"];
 	$id = $weapon["id"];
-	echo "#ws{$id}:checked ~ #map #w{$id} { display: none }"; // picked weapon not visible
+	$hide = HIDE;
+	echo "#ws{$id}:checked ~ #map #w{$id} { {$hide} }"; // picked weapon not visible
 	echo "#ws{$id}:checked ~ #inv .weapon::after { content: '{$weapon['name']}' }"; // picked weapon in inventory
 
 	$pos = $weapon["position"];
@@ -262,7 +267,7 @@ function serialize_wall_style(&$level) {
 		$id = $wall["id"];
 		$pos = $wall["position"];
 		position("w{$id}", $pos);
-		block_movement("", $pos);
+		block_movement("", $pos, DISABLE);
 	}
 }
 
@@ -276,12 +281,14 @@ function serialize_creature_style(&$level) {
 
 		echo "{$dead} ~ #map #c{$id} { animation: corpse 5000ms both }"; // dead creatures not visible
 		position("c{$id}", $pos, array("color" => $color));
-		block_movement("{$alive} ~", $pos); // cannot move here
+		block_movement("{$alive} ~", $pos, HIDE); // cannot move here
 
 		foreach (DIFFS as $dir => $delta) { // can attack here
 			$x = $pos[0]+$delta[0];
 			$y = $pos[1]+$delta[1];
-			echo "{$alive} ~ .ws:checked ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=cs{$id}].{$dir} { display: initial }"; 
+			$disable = DISABLE;
+			echo "{$alive} ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=cs{$id}].{$dir} { display: initial }"; 
+			echo ".ws:not(:checked) ~ #nav [for=cs{$id}].{$dir} { {$disable} }"; 
 		}
 	}
 
