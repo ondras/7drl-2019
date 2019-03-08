@@ -10,10 +10,12 @@ Inputs:
 #x* = x position
 #y* = y position
 #gs* = gold state
+#ws*, .ws = weapon state
 
 Visuals:
 
 #c*, .c = creature
+#w*, .w = weapon
 #w* = wall
 #g*, .g = gold
 .left, .right, .up, .down, .pick = navigation buttons
@@ -72,6 +74,10 @@ function serialize_state(&$level) {
 		input("radio", "gs{$id}");
 	}
 
+	$weapon = $level["weapon"];
+	$id = $weapon["id"];
+	input("radio", "ws{$id}", array("class" => "ws"));
+
 	$size = $level["size"];
 	for ($i=0;$i<$size[0];$i++) {
 		$attrs = array("name"=>"x");
@@ -109,6 +115,10 @@ function serialize_map(&$level) {
 	}
 	wall($size[0]+2);
 
+	$weapon = $level["weapon"];
+	$id = $weapon["id"];
+	echo "<span class='w' id='w{$id}' title='{$weapon['name']}'>{$weapon['letter']}</span>";
+
 	foreach ($level["gold"] as &$gold) {
 		$id = $gold["id"];
 		echo "<span class='g' id='g{$id}' title='Gold'>$</span>";
@@ -121,8 +131,7 @@ function serialize_map(&$level) {
 
 	foreach ($level["creatures"] as &$creature) {
 		$id = $creature["id"];
-		$name = $creature["name"];
-		echo "<span class='c' id='c{$id}' title='{$name}'>{$creature['letter']}*</span>";
+		echo "<span class='c' id='c{$id}' title='{$creature['name']}'>{$creature['letter']}{$creature['corpse']}</span>";
 	}
 
 	echo "<span id='pc' title='You!'>@</span>";
@@ -131,6 +140,7 @@ function serialize_map(&$level) {
 
 function serialize_inv(&$level) {
 	echo "<section id='inv'>";
+
 	echo "<div>Health: ";
 	$hp = $level["hp"];
 	for ($i=0;$i<$hp;$i++) { echo "<span class='hp'>♥</span>"; }
@@ -140,8 +150,15 @@ function serialize_inv(&$level) {
 	$keys = $level["keys"];
 	for ($i=0;$i<$keys;$i++) { echo "<span class='key'>⚷</span>"; }
 	echo "</div><div>";
+
 	echo "Gold:   ";
-	echo "<span class='gold-count'></span></div>";
+	echo "<span class='gold-count'></span>";
+	echo "</div><div>";
+
+	echo "<div>Weapon: ";
+	echo "<span class='weapon'></span>";
+	echo "</div>";
+
 	echo "</section>";
 }
 
@@ -179,6 +196,10 @@ function serialize_nav(&$level) {
 		echo "<label for='gs{$id}' class='pick'>Pick up gold</label>";
 	}
 
+	$weapon = $level["weapon"];
+	$id = $weapon["id"];
+	echo "<label for='ws{$id}' class='pick'>Pick up the {$weapon['name']}</label>";
+
 	echo "<div id='victory'>" . $level["victory"] . "</div>";
 	echo "<div id='gameover'>" . $level["gameover"] . "</div>";
 	echo "</section>";
@@ -214,12 +235,26 @@ function serialize_gold_style(&$level) {
 		echo "#gs{$id}:checked { counter-increment: gold }"; // gold counter
 
 		$pos = $gold["position"];
+		position("g{$id}", $pos);
+
 		$x = $pos[0];
 		$y = $pos[1];
 		echo "#gs{$id}:not(:checked) ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=gs{$id}] { display: initial }"; // gold pick
-
-		position("g{$id}", $pos);
 	}
+}
+
+function serialize_weapon_style(&$level) {
+	$weapon = $level["weapon"];
+	$id = $weapon["id"];
+	echo "#ws{$id}:checked ~ #map #w{$id} { display: none }"; // picked weapon not visible
+	echo "#ws{$id}:checked ~ #inv .weapon::after { content: '{$weapon['name']}' }"; // picked weapon in inventory
+
+	$pos = $weapon["position"];
+	position("w{$id}", $pos);
+
+	$x = $pos[0];
+	$y = $pos[1];
+	echo "#ws{$id}:not(:checked) ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=ws{$id}] { display: initial }"; // weapon pick
 }
 
 function serialize_wall_style(&$level) {
@@ -239,14 +274,14 @@ function serialize_creature_style(&$level) {
 		$alive = "#cs{$id}:not(:checked)";
 		$dead = "#cs{$id}:checked";
 
-		echo "{$dead} ~ #map #c{$id} { animation: corpse 3000ms both }"; // dead creatures not visible
+		echo "{$dead} ~ #map #c{$id} { animation: corpse 5000ms both }"; // dead creatures not visible
 		position("c{$id}", $pos, array("color" => $color));
 		block_movement("{$alive} ~", $pos); // cannot move here
 
 		foreach (DIFFS as $dir => $delta) { // can attack here
 			$x = $pos[0]+$delta[0];
 			$y = $pos[1]+$delta[1];
-			echo "{$alive} ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=cs{$id}].{$dir} { display: initial }"; 
+			echo "{$alive} ~ .ws:checked ~ #x{$x}:checked ~ #y{$y}:checked ~ #nav [for=cs{$id}].{$dir} { display: initial }"; 
 		}
 	}
 
@@ -285,6 +320,7 @@ function serialize_style(&$level) {
 
 	serialize_level_style($level);
 	serialize_wall_style($level);
+	serialize_weapon_style($level);
 	serialize_gold_style($level);
 	serialize_creature_style($level);
 

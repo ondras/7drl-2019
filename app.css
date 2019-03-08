@@ -87,6 +87,7 @@ footer {
 #map .c,
 #map .g,
 #map #pc,
+#map .w,
 #map .wall[id] {
   position: absolute;
   background-color: black;
@@ -131,6 +132,9 @@ footer {
 }
 #inv .hp {
   color: red;
+}
+#inv .weapon::after {
+  content: "none";
 }
 @keyframes key-add {
   0% {
@@ -265,6 +269,10 @@ footer {
 }
 header h1 {
   margin: 0;
+}
+header label {
+  font-size: 150%;
+  color: gold;
 }
 @media (max-width: 990px) {
   #game {

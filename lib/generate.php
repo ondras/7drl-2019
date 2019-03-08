@@ -31,11 +31,14 @@ function free_position(&$level, $force = false) {
 
 function creature_from_template($name, $position) {
 	global $creature_templates;
+	$corpses = array("*", "%", "&");
+	$corpse = $corpses[array_rand($corpses)];
 	$t = $creature_templates[$name];
 	$c = array(
 		"id" => id(),
 		"letter" => $t["letter"],
 		"name" => $t["name"],
+		"corpse" => $corpse,
 		"position" => $position,
 		"key" => $t["key"]
 	);
@@ -155,6 +158,24 @@ function generate_pc(&$level) {
 	$level["pc"] = free_position($level, array($x, $y));
 }
 
+function generate_weapon(&$level) {
+	$letter = (mt_rand(0, 1) ? "(" : ")");
+	$names = array("knife", "axe", "sword", "saber", "mace", "dagger", "hammer");
+	$color = array(
+		"h"=>array(0, 360),
+		"s"=>array(0, 10),
+		"v"=>array(70, 100)
+	);
+
+	$level["weapon"] = array(
+		"id" => id(),
+		"letter" => $letter,
+		"name" => $names[array_rand($names)],
+		"color" => expand_color($color),
+		"position" => free_position($level)
+	);
+}
+
 function generate_walls(&$level) {
 	$walls = array();
 	$size = $level["size"];
@@ -192,14 +213,15 @@ function generate_intro(&$level) {
 	switch ($level["number"]) {
 		case 1:
 			$str = "<p>The evil General Sibling Combinator has locked you in his underground prison. You are now located in the first dungeon level.</p>
-					<p>To escape, you need to find a key. Keys are always held by monsters, so to get one, you will need to fight.</p>
+					<p>To escape, you need to <strong>find a key</strong>. Keys are always held by monsters, so to get one, you will need to fight.</p>
+					<p>But before you can find, you need to <strong>pick up a weapon</strong>. Furtunately, these cells always contain some type of weapon somewhere...</p>
 					<p>Please click/touch the navigation controls to move around, pick stuff and attack monsters. (Remember: this is a no-JavaScript game, so the interaction is severly limited.)</p>";
 		break;
 
 		case 2:
 			$hp = $level["hp"];
 			$str = "<p>You managed to get to the second level. You will need to get two keys to continue.</p>
-					<p>You might have already noticed that not all monsters drop keys; some can damage you instead. You only have {$hp} lives, so take care.</p>";
+					<p>You might have already noticed that <strong>not all monsters drop keys</strong>; some can damage you instead. You only have {$hp} lives, so take care.</p>";
 		break;
 
 		case 3:
@@ -209,11 +231,11 @@ function generate_intro(&$level) {
 
 		case 4:
 			$str = "<p>We are currently running out of tutorial topics. You seem to be completely familiar with all aspects of this game.</p>
-					<p>If you are feeling adventurous, try to pick as many gold pieces as you can when roaming through the level.</p>";
+					<p>If you are feeling adventurous, try to pick as many <strong>gold pieces</strong> as you can when roaming through the level.</p>";
 		break;
 
 		case 5:
-			$str = "<p>This could be a good time for a little snack, what do you think? Do yourself a favor and prepare a cup of tea or coffee; maybe with a cookie or an apple or a small piece of lutefisk?</p>";
+			$str = "<p>This could be a good time for a <strong>little snack</strong>, what do you think? Do yourself a favor and prepare a cup of tea or coffee; maybe with a cookie or an apple or a small piece of lutefisk?</p>";
 		break;
 
 		case 6:
@@ -240,11 +262,12 @@ function generate_level($number, $seed) {
 	$level["number"] = $number;
 	$level["hp"] = 3;
 	$level["keys"] = min($number, 3);
-	$level["size"] = array(7 + 2*$number, 5 + floor($number/2)); // fixme
+	$level["size"] = array(7 + 2*$number, 5 + floor($number/2));
 
 	generate_intro($level);
 	generate_pc($level);
 	generate_walls($level);
+	generate_weapon($level);
 	generate_gold($level);
 	generate_creatures($level);
 
