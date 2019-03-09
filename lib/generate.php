@@ -225,8 +225,8 @@ function generate_intro(&$level) {
 		break;
 
 		case 3:
-			$str = "<p>Further levels will always require <strong>three keys to escape.</strong></p>
-					<p>The General Sibling Combinator has locked more enemy creatures in these cells, so be careful when deciding what to fight.</p>";
+			$str = "<p>Further levels will always require three keys to escape.</p>
+					<p>The General Sibling Combinator has locked more enemy creatures in these cells, so be careful when picking what to fight. Your <strong>memories from previous levels</strong> might help you with the decision.</p>";
 		break;
 
 		case 4:
