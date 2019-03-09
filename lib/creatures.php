@@ -13,9 +13,9 @@ $creature_templates = array(
 		"color" => array("h"=> array(30, 50), "s"=>array(50, 90), "v"=>array(60, 90))
 	),
 
-	"demon" => array(
+	"daemon" => array(
 		"letter" => "d",
-		"name" => "demon",
+		"name" => "Daemon",
 		"color" => array("h"=> 0, "s"=>array(80, 100), "v"=>array(70, 100))
 	),
 
