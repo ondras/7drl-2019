@@ -11,7 +11,7 @@ body {
 label,
 a {
   text-decoration: none;
-  background: linear-gradient(0, dodgerblue, dodgerblue) no-repeat;
+  background: linear-gradient(0deg, dodgerblue, dodgerblue) no-repeat;
   background-position: 0 95%;
   background-size: 100% 2px;
   color: inherit;
@@ -168,6 +168,8 @@ footer {
   position: relative;
   float: right;
   font-size: 200%;
+}
+.cs.key:not(:checked) ~ #nav {
   min-height: 12.5em;
 }
 #nav #victory,
@@ -178,10 +180,6 @@ footer {
 #nav #victory p:first-child,
 #nav #gameover p:first-child {
   margin-top: 0;
-}
-#nav #victory p:last-child,
-#nav #gameover p:last-child {
-  margin-bottom: 0;
 }
 #nav label {
   display: none;

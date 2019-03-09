@@ -9,14 +9,15 @@
 	float: right;
 	font-size: 200%;
 
-	min-height: @nav-height;
+	.cs.key:not(:checked) ~ & {  // only when there are keys remaining
+		min-height: @nav-height;
+	}
 
 	#victory, #gameover { 
 		font-size: 100% / @lh;
 		display: none;
 
 		p:first-child { margin-top: 0; }
-		p:last-child { margin-bottom: 0; }
 	}
 
 	label { 

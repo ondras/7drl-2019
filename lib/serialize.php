@@ -173,15 +173,15 @@ function serialize_nav(&$level) {
 	for ($i=0;$i<$size[0];$i++) {
 		$prev = $i-1;
 		$next = $i+1;
-		if ($prev >= 0) { echo "<label for='x{$prev}' class='left'>{$label}</label>"; }
-		if ($next < $size[0]) { echo "<label for='x{$next}' class='right'>{$label}</label>"; }
+		echo "<label for='x{$prev}' class='left'>{$label}</label>";
+		echo "<label for='x{$next}' class='right'>{$label}</label>";
 	}
 
 	for ($i=0;$i<$size[1];$i++) {
 		$prev = $i-1;
 		$next = $i+1;
-		if ($prev >= 0) { echo "<label for='y{$prev}' class='up'>{$label}</label>"; }
-		if ($next < $size[1]) { echo "<label for='y{$next}' class='down'>{$label}</label>"; }
+		echo "<label for='y{$prev}' class='up'>{$label}</label>";
+		echo "<label for='y{$next}' class='down'>{$label}</label>";
 	}
 
 	foreach ($level["creatures"] as &$creature) {
@@ -226,6 +226,12 @@ function serialize_level_style(&$level) {
 		echo "#y{$i}:checked ~ #nav .up[for=y{$prev}] { display: initial }";  // up buttons
 		echo "#y{$i}:checked ~ #nav .down[for=y{$next}] { display: initial }";  // down buttons
 	}
+
+	// extreme buttons always disabled
+	$disable = DISABLE;
+	$x = $size[0];
+	$y = $size[1];
+	echo "[for=x-1], [for=y-1], [for=x{$x}], [for=y{$y}] { {$disable}; }";
 
 	$pad = $size[0] + 2 + 1;
 	echo "#nav { width: calc(100% - {$pad}ch) }";
