@@ -221,7 +221,7 @@ function generate_intro(&$level) {
 		case 2:
 			$hp = $level["hp"];
 			$str = "<p>You managed to get to the second level. You will need to get two keys to continue.</p>
-					<p>You might have already noticed that <strong>not all monsters drop keys</strong>; some can damage you instead. You only have {$hp} lives, so take care.</p>";
+					<p>You might have already noticed that <strong>not all monsters drop keys</strong>; some can damage you instead. You only have {$hp} lives, so take care. Reading these introductory texts might help you survive as well.</p>";
 		break;
 
 		case 3:
