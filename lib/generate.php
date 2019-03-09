@@ -60,10 +60,10 @@ function generate_creatures(&$level) {
 	global $creature_templates;
 
 	$names = array_keys($creature_templates);
-	$half = floor(count($names)/2);
+	$break = floor(count($names)/2);
 
-	$names_ok = array_slice($names, 0, $half);
-	$names_ko = array_slice($names, $half);
+	$names_ok = array_slice($names, 0, $break);
+	$names_ko = array_slice($names, $break);
 	foreach ($names_ok as $name) { $creature_templates[$name]["key"] = true; }
 	foreach ($names_ko as $name) { $creature_templates[$name]["key"] = false; }
 
